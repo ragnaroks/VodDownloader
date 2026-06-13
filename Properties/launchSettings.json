@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "VodDownloader": {
+      "commandName": "Project",
+      "commandLineArgs": "--dev"
+    }
+  }
+}
