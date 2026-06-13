@@ -57,7 +57,7 @@ public sealed class FFZYParserService : ISiteParserService {
             Id = Convert.ToUInt32(vodDetail.VodId),
             Name = vodDetail.VodName,
             Cover = vodDetail.VodPic,
-            Date = vodDetail.VodPubdate,
+            Date = String.IsNullOrWhiteSpace(vodDetail.VodPubdate) ? vodDetail.VodYear : vodDetail.VodPubdate,
             Description = vodDetail.VodContent
         };
         foreach (String item in splitedArray) {
