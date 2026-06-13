@@ -1,8 +1,12 @@
 {
   "profiles": {
-    "VodDownloader": {
+    "VodDownloader[Vid]": {
       "commandName": "Project",
-      "commandLineArgs": "--dev"
+      "commandLineArgs": "--dev vid ffzy 29236"
+    },
+    "VodDownloader[URL]": {
+      "commandName": "Project",
+      "commandLineArgs": "--dev url https://www.ffzy5.tv/index.php/vod/detail/id/95738.html"
     }
   }
 }
