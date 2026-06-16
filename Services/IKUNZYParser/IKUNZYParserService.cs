@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using VodDownloader.Entities;
 using VodDownloader.Interfaces;
@@ -17,7 +18,8 @@ public sealed class IKUNZYParserService : ISiteParserService {
     public VodDetailLite? GetVodDetail (UInt32 vid) {
         String httpBody;
         try {
-            httpBody = this.HttpClient.GetStringAsync(String.Concat(this.UrlPath, vid)).GetAwaiter().GetResult();
+            ReadOnlySpan<Byte> httpBytes = this.HttpClient.GetByteArrayAsync(String.Concat(this.UrlPath, vid)).GetAwaiter().GetResult();
+            httpBody = Encoding.UTF8.GetString(httpBytes);
         } catch (Exception ex) {
             Console.WriteLine("[IKUNZYParserService] HTTP 请求失败");
             Console.WriteLine(ex.Message);
