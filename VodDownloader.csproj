@@ -6,8 +6,8 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ErrorReport>prompt</ErrorReport>
-    <AssemblyVersion>0.1.1</AssemblyVersion>
-    <Version>0.1.1</Version>
+    <AssemblyVersion>0.1.2</AssemblyVersion>
+    <Version>0.1.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
