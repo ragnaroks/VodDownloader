@@ -52,20 +52,21 @@ public sealed class CommandLineService {
             if (valid is true && newValue is not null) { return; }
             result.AddError("参数 <URL> 错误，反序列化失败");
         });
-        this.SubCommandURL.Arguments.Add(this.ArgumentURL);
         this.SubCommandURL.SetAction(this.CommandURL);
+        this.SubCommandURL.Arguments.Add(this.ArgumentURL);
+        this.SubCommandURL.Options.Add(this.OptionThreadCount);
 
         this.ArgumentType.Description = "资源库类型，例如 ffzy、lzzy 等 ，详情请执行 list 子命令查看";
         this.ArgumentVid.Description = "视频 id，例如 114514 等";
         this.SubCommandVid.SetAction(this.CommandVid);
         this.SubCommandVid.Arguments.Add(this.ArgumentType);
         this.SubCommandVid.Arguments.Add(this.ArgumentVid);
+        this.SubCommandVid.Options.Add(this.OptionThreadCount);
 
         this.SubCommandList.SetAction(this.CommandList);
 
         this.RootCommand = new("VodDownloader");
         this.RootCommand.Options.Add(this.OptionDev);
-        this.RootCommand.Options.Add(this.OptionThreadCount);
         this.RootCommand.Subcommands.Add(this.SubCommandTest);
         this.RootCommand.Subcommands.Add(this.SubCommandURL);
         this.RootCommand.Subcommands.Add(this.SubCommandVid);

@@ -2,7 +2,7 @@
   "profiles": {
     "VodDownloader[Vid]": {
       "commandName": "Project",
-      "commandLineArgs": "--dev vid ffzy 29236"
+      "commandLineArgs": "--dev vid ikunzy 27823"
     },
     "VodDownloader[URL]": {
       "commandName": "Project",
