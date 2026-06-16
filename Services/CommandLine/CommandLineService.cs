@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using VodDownloader.Entities;
+using VodDownloader.Helpers;
 using VodDownloader.Interfaces;
 
 namespace VodDownloader.Services.CommandLine;
@@ -278,6 +279,7 @@ public sealed class CommandLineService {
             if (String.IsNullOrWhiteSpace(item)) { continue; }
             String[] splited = item.Split('$', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             if (splited.Length is not 2) { continue; }
+            String saveDir = Path.Combine("__downloads__",String.Concat(Misc.FormatVodName(vodDetailLite.Name),"_",vodDetailLite.Date));
             Process? processDownloader = Process.Start(new ProcessStartInfo() {
                 UseShellExecute = false,
                 FileName = "N_m3u8DL-RE",
@@ -286,7 +288,7 @@ public sealed class CommandLineService {
                     "--tmp-dir",
                     "__tmpdir__",
                     "--save-dir",
-                    Path.Combine("__downloads__",String.Concat(vodDetailLite.Name,"_",vodDetailLite.Date)),
+                    saveDir,
                     "--save-name",
                     splited[0],
                     "--header",
