@@ -6,7 +6,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ErrorReport>prompt</ErrorReport>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
   </PropertyGroup>
 
