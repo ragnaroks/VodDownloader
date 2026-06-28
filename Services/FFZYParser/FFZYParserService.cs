@@ -8,8 +8,10 @@ namespace VodDownloader.Services.FFZYParser;
 
 public sealed class FFZYParserService : ISiteParserService {
     private String UrlPath { get; } = "/api.php/provide/vod/from/ffm3u8/at/json/ac/detail/ids/";
+
     private HttpClient HttpClient { get; }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0290:使用主构造函数", Justification = "<挂起>")]
     public FFZYParserService (HttpClient httpClient) {
         this.HttpClient = httpClient;
     }
@@ -17,7 +19,7 @@ public sealed class FFZYParserService : ISiteParserService {
     public VodDetailLite? GetVodDetail (UInt32 vid) {
         String httpBody;
         try {
-            httpBody = this.HttpClient.GetStringAsync(String.Concat(this.UrlPath, vid)).GetAwaiter().GetResult();
+            httpBody = this.HttpClient.GetStringAsync($"{this.UrlPath}{vid}").GetAwaiter().GetResult();
         } catch (Exception ex) {
             Console.WriteLine("[FFZYParserService] HTTP 请求失败");
             Console.WriteLine(ex.Message);

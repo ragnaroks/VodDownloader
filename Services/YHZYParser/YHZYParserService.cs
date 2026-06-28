@@ -1,60 +1,58 @@
 ﻿using System;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using VodDownloader.Entities;
 using VodDownloader.Interfaces;
 
-namespace VodDownloader.Services.IKUNZYParser;
+namespace VodDownloader.Services.YHZYParser;
 
-public sealed class IKUNZYParserService : ISiteParserService {
-    private String UrlPath { get; } = "/api.php/provide/vod/at/json/ac/detail/ids/";
+public sealed class YHZYParserService : ISiteParserService {
+    private String UrlPath { get; } = "/api.php/seacms/vod/at/json/ac/detail/ids/";
 
     private HttpClient HttpClient { get; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0290:使用主构造函数", Justification = "<挂起>")]
-    public IKUNZYParserService (HttpClient httpClient) {
+    public YHZYParserService (HttpClient httpClient) {
         this.HttpClient = httpClient;
     }
 
     public VodDetailLite? GetVodDetail (UInt32 vid) {
         String httpBody;
         try {
-            ReadOnlySpan<Byte> httpBytes = this.HttpClient.GetByteArrayAsync($"{this.UrlPath}{vid}").GetAwaiter().GetResult();
-            httpBody = Encoding.UTF8.GetString(httpBytes);
+            httpBody = this.HttpClient.GetStringAsync($"{this.UrlPath}{vid}").GetAwaiter().GetResult();
         } catch (Exception ex) {
-            Console.WriteLine("[IKUNZYParserService] HTTP 请求失败");
+            Console.WriteLine("[YHZYParserService] HTTP 请求失败");
             Console.WriteLine(ex.Message);
             return null;
         }
         if (String.IsNullOrWhiteSpace(httpBody)) {
-            Console.WriteLine("[IKUNZYParserService] 获取数据失败，响应为空");
+            Console.WriteLine("[YHZYParserService] 获取数据失败，响应为空");
             return null;
         }
         JsonDetailResponse? response;
         try {
             response = JsonSerializer.Deserialize<JsonDetailResponse>(httpBody);
         } catch (Exception ex) {
-            Console.WriteLine("[IKUNZYParserService] 解析数据失败");
+            Console.WriteLine("[YHZYParserService] 解析数据失败");
             Console.WriteLine(ex.Message);
             return null;
         }
         if (response is null || response.Code is not 1) {
-            Console.WriteLine("[IKUNZYParserService] 解析数据失败");
+            Console.WriteLine("[YHZYParserService] 解析数据失败");
             return null;
         }
         if (response.List.Count < 1) {
-            Console.WriteLine("[IKUNZYParserService] 剧集为空");
+            Console.WriteLine("[YHZYParserService] 剧集为空");
             return null;
         }
         VodDetailTemplate vodDetail = response.List[0];
         if (vodDetail is null) {
-            Console.WriteLine("[IKUNZYParserService] 剧集为空");
+            Console.WriteLine("[YHZYParserService] 剧集为空");
             return null;
         }
         String[] splitedArray = vodDetail.VodPlayUrl.Split('#', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         if (splitedArray.Length < 1) {
-            Console.WriteLine("[IKUNZYParserService] 剧集为空");
+            Console.WriteLine("[YHZYParserService] 剧集为空");
             return null;
         }
         VodDetailLite vodDetailLite = new() {

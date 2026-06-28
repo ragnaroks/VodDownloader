@@ -1,0 +1,27 @@
+{
+  "site-type": {
+    "ffzy": [
+      "ffzy.tv","www.ffzy.tv","ffzy1.tv","www.ffzy1.tv","ffzy2.tv","www.ffzy2.tv",
+      "ffzy3.tv","www.ffzy3.tv","ffzy4.tv","www.ffzy4.tv","ffzy5.tv","www.ffzy5.tv",
+      "api.ffzyapi.com","cj.ffzyapi.com"
+    ],
+    "lzzy": [
+      "lzzy.tv","www.lzzy.tv","lzizy1.com","www.lzizy1.com","lzizy2.com","www.lzizy2.com",
+      "lzizy3.com","www.lzizy3.com","lzizy4.com","www.lzizy4.com","lzizy5.com","www.lzizy5.com",
+      "lzizy6.com","www.lzizy6.com","lzizy7.com","www.lzizy7.com","lzizy8.com","www.lzizy8.com"
+    ],
+    "ikunzy": [
+      "ikunzy.com","www.ikunzy.com","ikunzy.net","www.ikunzy.net","ikunzy.org","www.ikunzy.org",
+      "ikunzy.vip","www.ikunzy.vip","ikunzyapi.com","www.ikunzyapi.com"
+    ],
+    "yhzy": [
+      "yhzy.cc","www.yhzy.cc"
+    ],
+    "bfzy": [
+      "bfzy.tv","www.bfzy.tv","bfzy1.tv","www.bfzy1.tv","bfzy2.tv","www.bfzy2.tv",
+      "bfzy3.tv","www.bfzy3.tv","bfzy4.tv","www.bfzy4.tv","bfzy5.tv","www.bfzy5.tv",
+      "bfzy6.tv","www.bfzy6.tv","bfzy7.tv","www.bfzy7.tv","bfzy8.tv","www.bfzy8.tv",
+      "bfzy9.tv","www.bfzy9.tv","bfzy10.tv","www.bfzy10.tv"
+    ]
+  }
+}

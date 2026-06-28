@@ -2,11 +2,11 @@
   "profiles": {
     "VodDownloader[Vid]": {
       "commandName": "Project",
-      "commandLineArgs": "--dev vid ikunzy 27823"
+      "commandLineArgs": "--dev vid yhzy 35601"
     },
     "VodDownloader[URL]": {
       "commandName": "Project",
-      "commandLineArgs": "--dev url https://www.ffzy5.tv/index.php/vod/detail/id/95738.html"
+      "commandLineArgs": "--dev url https://www.bfzy7.tv/index.php/vod/detail/id/50787.html"
     }
   }
 }

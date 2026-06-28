@@ -1,9 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using VodDownloader.Services.CommandLine;
-using VodDownloader.Services.FFZYParser;
-using VodDownloader.Services.IKUNZYParser;
-using VodDownloader.Services.LZZYParser;
 
 namespace VodDownloader;
 
@@ -14,31 +10,53 @@ public static class Program {
 
     public static Int32 Main (String[] args) {
         ServiceCollection services = new();
-        _ = services.AddSingleton<CommandLineService>();
-        _ = services.AddScoped<FFZYParserService>();
-        _ = services.AddHttpClient<FFZYParserService>(client => {
+        _ = services.AddSingleton<Services.CommandLine.CommandLineService>();
+        _ = services.AddSingleton<Services.AppSetting.AppSettingService>();
+        _ = services.AddScoped<Services.FFZYParser.FFZYParserService>();
+        _ = services.AddHttpClient<Services.FFZYParser.FFZYParserService>(client => {
             client.Timeout = TimeSpan.FromSeconds(8);
             client.BaseAddress = new("https://api.ffzyapi.com");
             client.DefaultRequestHeaders.UserAgent.Clear();
             client.DefaultRequestHeaders.UserAgent.ParseAdd(Program.UserAgent);
         });
-        _ = services.AddScoped<LZZYParserService>();
-        _ = services.AddHttpClient<LZZYParserService>(client => {
+        _ = services.AddScoped<Services.LZZYParser.LZZYParserService>();
+        _ = services.AddHttpClient<Services.LZZYParser.LZZYParserService>(client => {
             client.Timeout = TimeSpan.FromSeconds(8);
             client.BaseAddress = new("https://cj.lziapi.com");
             client.DefaultRequestHeaders.UserAgent.Clear();
             client.DefaultRequestHeaders.UserAgent.ParseAdd(Program.UserAgent);
         });
-        _ = services.AddScoped<IKUNZYParserService>();
-        _ = services.AddHttpClient<IKUNZYParserService>(client => {
+        _ = services.AddScoped<Services.IKUNZYParser.IKUNZYParserService>();
+        _ = services.AddHttpClient<Services.IKUNZYParser.IKUNZYParserService>(client => {
             client.Timeout = TimeSpan.FromSeconds(8);
             client.BaseAddress = new("https://www.ikunzyapi.com");
             client.DefaultRequestHeaders.UserAgent.Clear();
             client.DefaultRequestHeaders.UserAgent.ParseAdd(Program.UserAgent);
         });
+        _ = services.AddScoped<Services.YHZYParser.YHZYParserService>();
+        _ = services.AddHttpClient<Services.YHZYParser.YHZYParserService>(client => {
+            client.Timeout = TimeSpan.FromSeconds(8);
+            client.BaseAddress = new("https://m3u8.apiyhzy.com");
+            client.DefaultRequestHeaders.UserAgent.Clear();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(Program.UserAgent);
+        });
+        _ = services.AddScoped<Services.BFZYParser.BFZYParserService>();
+        _ = services.AddHttpClient<Services.BFZYParser.BFZYParserService>(client => {
+            client.Timeout = TimeSpan.FromSeconds(8);
+            client.BaseAddress = new("https://bfzyapi.com");
+            client.DefaultRequestHeaders.UserAgent.Clear();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(Program.UserAgent);
+        });
         Program.ServiceProvider = services.BuildServiceProvider();
 
-        CommandLineService commandLineService = Program.ServiceProvider.GetRequiredService<CommandLineService>();
+        try {
+            _ = Program.ServiceProvider.GetRequiredService<Services.AppSetting.AppSettingService>();
+        } catch (Exception ex) {
+            Console.WriteLine("解析配置文件时发生异常，{0}",ex.Message);
+            return 1;
+        }
+        
+        Services.CommandLine.CommandLineService commandLineService = Program.ServiceProvider.GetRequiredService<Services.CommandLine.CommandLineService>();
         return commandLineService.RootCommand.Parse(args).Invoke();
     }
 }
