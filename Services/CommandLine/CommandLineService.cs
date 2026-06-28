@@ -18,16 +18,18 @@ public sealed class CommandLineService {
 
     private Command SubCommandURL { get; } = new("url");
 
-    private Argument<String> ArgumentURL { get; } = new("URL");
+    private Command SubCommandURLTest{ get; } = new("url-test");
 
     private Command SubCommandVid { get; } = new("vid");
+
+    private Command SubCommandList { get; } = new("list");
+
+    private Argument<String> ArgumentURL { get; } = new("URL");
 
     private Argument<String> ArgumentType { get; } = new("TYPE");
 
     private Argument<UInt32> ArgumentVid { get; } = new("VID");
-
-    private Command SubCommandList { get; } = new("list");
-
+    
     private Option<Boolean> OptionDev { get; } = new("--dev");
 
     private Option<UInt32> OptionThreadCount { get; } = new("--thread-count");
@@ -43,8 +45,6 @@ public sealed class CommandLineService {
             result.AddError("选项 --thread-count 的值不能超过 32");
         });
 
-        this.SubCommandTest.SetAction(this.CommandTest);
-
         this.ArgumentURL.Description = "资源库视频详情页面地址";
         this.ArgumentURL.Validators.Add((result) => {
             String value = result.GetValueOrDefault<String>();
@@ -52,12 +52,16 @@ public sealed class CommandLineService {
             if (valid is true && newValue is not null) { return; }
             result.AddError("参数 <URL> 错误，反序列化失败");
         });
+
+        this.ArgumentType.Description = "资源库类型，例如 ffzy、lzzy 等 ，详情请执行 list 子命令查看";
+        this.ArgumentVid.Description = "视频 id，例如 114514 等";
+
+        this.SubCommandTest.SetAction(this.CommandTest);
+
         this.SubCommandURL.SetAction(this.CommandURL);
         this.SubCommandURL.Arguments.Add(this.ArgumentURL);
         this.SubCommandURL.Options.Add(this.OptionThreadCount);
 
-        this.ArgumentType.Description = "资源库类型，例如 ffzy、lzzy 等 ，详情请执行 list 子命令查看";
-        this.ArgumentVid.Description = "视频 id，例如 114514 等";
         this.SubCommandVid.SetAction(this.CommandVid);
         this.SubCommandVid.Arguments.Add(this.ArgumentType);
         this.SubCommandVid.Arguments.Add(this.ArgumentVid);
@@ -65,9 +69,13 @@ public sealed class CommandLineService {
 
         this.SubCommandList.SetAction(this.CommandList);
 
+        this.SubCommandURLTest.SetAction(this.CommandURLTest);
+        this.SubCommandURLTest.Arguments.Add(this.ArgumentURL);
+
         this.RootCommand = new("VodDownloader");
         this.RootCommand.Options.Add(this.OptionDev);
         this.RootCommand.Subcommands.Add(this.SubCommandTest);
+        this.RootCommand.Subcommands.Add(this.SubCommandURLTest);
         this.RootCommand.Subcommands.Add(this.SubCommandURL);
         this.RootCommand.Subcommands.Add(this.SubCommandVid);
         this.RootCommand.Subcommands.Add(this.SubCommandList);
@@ -144,7 +152,7 @@ public sealed class CommandLineService {
             Console.WriteLine("[CommandURL] 资源站链接 {0} 解析失败", url);
             return;
         }
-        (String type, UInt32 vid) = Misc.ParseVid(uri);
+        (String type, UInt32 vid) = Misc.ParseTypeAndVid(uri);
         if (String.IsNullOrWhiteSpace(type) || vid < 1) {
             Console.WriteLine("[CommandURL] 资源站链接 {0} 暂未支持", url);
             return;
@@ -158,6 +166,21 @@ public sealed class CommandLineService {
         UInt32 vid = parseResult.GetRequiredValue(this.ArgumentVid);
         UInt32 threadCount = parseResult.GetValue(this.OptionThreadCount);
         this.DownloadTask(type, vid, threadCount);
+    }    
+
+    private void CommandURLTest (ParseResult parseResult) {
+        String url = parseResult.GetRequiredValue(this.ArgumentURL);
+        Boolean valid = Uri.TryCreate(url, UriKind.Absolute, out Uri? uri);
+        if (valid is false || uri is null) {
+            Console.WriteLine("[CommandURL] 资源站链接 {0} 解析失败", url);
+            return;
+        }
+        (String type, UInt32 vid) = Misc.ParseTypeAndVid(uri);
+        if (String.IsNullOrWhiteSpace(type) || vid < 1) {
+            Console.WriteLine("[CommandURL] 资源站链接 {0} 暂未支持", url);
+            return;
+        }
+        Console.WriteLine("{0} => type: {1}, vid: {2}",url,type,vid);
     }
 
     private void CommandList (ParseResult parseResult) {
@@ -239,5 +262,5 @@ public sealed class CommandLineService {
             Thread.Sleep(1500);
             Console.WriteLine("[DownloadTask] 任务《{0}》{1} 完成", vodDetailLite.Name, splited[0]);
         }
-    }
+    }    
 }

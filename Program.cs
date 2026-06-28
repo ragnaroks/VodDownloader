@@ -11,6 +11,7 @@ public static class Program {
     public static Int32 Main (String[] args) {
         ServiceCollection services = new();
         _ = services.AddSingleton<Services.CommandLine.CommandLineService>();
+        _ = services.AddSingleton<Services.AppSetting.AppSettingService>();
         _ = services.AddScoped<Services.FFZYParser.FFZYParserService>();
         _ = services.AddHttpClient<Services.FFZYParser.FFZYParserService>(client => {
             client.Timeout = TimeSpan.FromSeconds(8);
@@ -48,6 +49,13 @@ public static class Program {
         });
         Program.ServiceProvider = services.BuildServiceProvider();
 
+        try {
+            _ = Program.ServiceProvider.GetRequiredService<Services.AppSetting.AppSettingService>();
+        } catch (Exception ex) {
+            Console.WriteLine("解析配置文件时发生异常，{0}",ex.Message);
+            return 1;
+        }
+        
         Services.CommandLine.CommandLineService commandLineService = Program.ServiceProvider.GetRequiredService<Services.CommandLine.CommandLineService>();
         return commandLineService.RootCommand.Parse(args).Invoke();
     }
